@@ -25,9 +25,10 @@ class FragGabiEntry:
         """
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'html.parser')
-        self.question.content = soup.find_all(class_='question-detail')[0].get_text().strip()
+        question_content_raw = soup.find_all(class_='question-detail')[0].get_text().strip()
+        self.question.content = question_content_raw.split('\n\n\n')[0].strip()
         self.question.title = soup.find_all(class_='question-header')[0].get_text().strip()
-        author_date = self.question.content.split('\n\n\n')[1].strip()[4:].split(' / ')
+        author_date = question_content_raw.split('\n\n\n')[1].strip()[4:].split(' / ')
         self.question.author = author_date[0]
         self.question.set_date(author_date[1])
         self.answer = soup.find_all(class_='question-answers__content--expert')[0].get_text(separator='\n')
